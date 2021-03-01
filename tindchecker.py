@@ -27,8 +27,8 @@ if len(sys.argv) != 3:
   print("python tindchecker.py inputfil outputfil\n\n")
   sys.exit()
 count = 0
-with open ('outputfil.txt', 'w', encoding='UTF-8') as output:
-    with open('inputfil.txt', 'r') as input:
+with open (sys.argv[2], 'w', encoding='UTF-8') as output:
+    with open(sys.argv[1], 'r') as input:
         for line in input:
             r = requests.get(
                 url='https://ntnu.tind.io/search?of=btex&p=' + line.strip()
