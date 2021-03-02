@@ -1,10 +1,19 @@
-import sys, requests, time
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 try:
     import requests
 except ModuleNotFoundError:
-    print("requests modulen er ikke installert, installer ved å skrive: 'pip install requests'")
+    print("requests modulen er ikke installert, installer ved aa skrive: 'pip install requests'")
+    sys.exit()
 
+import sys, requests, time, platform
+
+
+
+if not (int(platform.python_version().split('.')[0]) == 3 and int(platform.python_version().split('.')[1]) >= 5):
+    print("For gammel versjon av python, kjor med versjon storre enn 3.5")
+    print("versjon: ", platform.python_version())
+    sys.exit()
 
 def bibreader(inputtext):
     outputelement = {}
@@ -23,7 +32,7 @@ def read_many_bibs(inputtext):
     
 if len(sys.argv) != 3:
   print("\nMangler inputfil og/eller outputfil")
-  print("Kjør scriptet slik:\n")
+  print("Kjor scriptet slik:\n")
   print("python tindchecker.py inputfil outputfil\n\n")
   sys.exit()
 count = 0
@@ -41,4 +50,4 @@ with open (sys.argv[2], 'w', encoding='UTF-8') as output:
             count += 1
             time.sleep(0.5)
             output.flush()
-print('prosseserte ', count, ' søk')
+print('prosseserte ', count, ' antall rader')
