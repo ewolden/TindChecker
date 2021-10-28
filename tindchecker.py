@@ -35,19 +35,33 @@ if len(sys.argv) != 3:
   print("Kjor scriptet slik:\n")
   print("python tindchecker.py inputfil outputfil\n\n")
   sys.exit()
-count = 0
+total_rows_ok = 0
+total_empty_rows = 0
+total_rows = 0
 with open (sys.argv[2], 'w', encoding='UTF-8') as output:
     with open(sys.argv[1], 'r') as input:
         for line in input:
+            total_rows += 1
+            current_query = line.strip()
+            if not current_query:
+                total_empty_rows += 1
+                output.write('\n')
+                continue
+            if current_query[-1] == ',':
+                current_query = current_query[:-1]
             r = requests.get(
-                url='https://ntnu.tind.io/search?of=btex&p=' + line.strip()
+                url='https://ntnu.tind.io/search?of=btex&p=' + current_query
             )
             if r.ok and r.text != '':
                 output_row = line.strip() 
                 for matches in read_many_bibs(r.text):
-                    output_row += ';' + str(matches.get('recid')) + ';' + str(matches.get('title')) + ';' + str(matches.get('author'))
+                    output_row += ';' + str(matches.get('recid')) + ';' + str(matches.get('title')) + ';' + str(matches.get('archive')) + ';' + str(matches.get('author'))
+                print(current_query, ' - fant treff')
                 output.write(output_row + '\n')
-            count += 1
+                total_rows_ok += 1
+            else:
+                print(current_query, ' - ikke funnet')
+                output.write(line.strip() + '\n')
             time.sleep(0.5)
             output.flush()
-print('prosseserte ', count, ' antall rader')
+print('prosseserte totalt', total_rows, ' antall rader, der ', total_empty_rows, ' var tomme, og ', total_rows_ok, ' fant informasjon hos tind')
