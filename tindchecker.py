@@ -45,7 +45,7 @@ with open (sys.argv[2], 'w', encoding='UTF-8') as output:
             current_query = line.strip()
             if not current_query:
                 total_empty_rows += 1
-                output.write('\n')
+                output.write('tom linje' + ';' + '\n')
                 continue
             if current_query[-1] == ',':
                 current_query = current_query[:-1]
@@ -53,7 +53,7 @@ with open (sys.argv[2], 'w', encoding='UTF-8') as output:
                 url='https://ntnu.tind.io/search?of=btex&p=' + current_query
             )
             if r.ok and r.text != '':
-                output_row = line.strip() 
+                output_row = 'fant treff' + ';' + line.strip() 
                 for matches in read_many_bibs(r.text):
                     output_row += ';' + str(matches.get('recid')) + ';' + str(matches.get('title')) + ';' + str(matches.get('archive')) + ';' + str(matches.get('author'))
                 print(current_query, ' - fant treff')
@@ -61,7 +61,7 @@ with open (sys.argv[2], 'w', encoding='UTF-8') as output:
                 total_rows_ok += 1
             else:
                 print(current_query, ' - ikke funnet')
-                output.write(line.strip() + '\n')
+                output.write('ikke funnet' + ';' + line.strip() + '\n')
             time.sleep(0.5)
             output.flush()
 print('prosseserte totalt', total_rows, ' antall rader, der ', total_empty_rows, ' var tomme, og ', total_rows_ok, ' fant informasjon hos tind')
